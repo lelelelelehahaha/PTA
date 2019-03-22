@@ -37,8 +37,18 @@ void Print_Factorial(const int N) {
 			}
 			n--;
 		}
+		a--;
+		printf("%d",arr[a]);
+		int t,ti;
 		while(a) {
 			a--;
+			t=arr[a];
+			ti=3;
+			while(t>10){
+				t/=10;
+				ti--;
+			}
+			for(i=0;i<ti;i++) putchar('0');
 			printf("%d",arr[a]);
 		}
 	}
