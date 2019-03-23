@@ -44,7 +44,7 @@ void Print_Factorial(const int N) {
 			a--;
 			t=arr[a];
 			ti=3;
-			while(t>10){
+			while(t>=10){
 				t/=10;
 				ti--;
 			}
