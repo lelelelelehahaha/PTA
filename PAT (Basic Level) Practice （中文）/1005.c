@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-//printf("Debug output\t \n");
 
 struct Node {
 	int Data;
@@ -8,14 +7,6 @@ struct Node {
 };
 int k;
 struct Node *temp,*Key[101];
-
-void Print(struct Node *L) {
-	while(L!=NULL) {
-		printf("->%d",L->Data);
-		L=L->Next;
-	}
-	putchar('\n');
-}
 
 struct Node * Insert(struct Node *L,int N) {
 	L=malloc(sizeof(struct Node));
@@ -56,7 +47,6 @@ int main()
 		if(iscov(n)) continue;
 		temp=Insert(temp,n);
 		m=cut(n,temp);
-		Print(temp);
 		for(j=0;j<k;j++) {
 			if(m==Key[j]->Data) {
 				p=temp->Next;
@@ -74,14 +64,18 @@ int main()
 			k++;
 		}
 	}
-	for(i=0;i<k;i++) {
-		printf("%d",Key[i]->Data);
-		p=Key[i]->Next;
-		while(p!=NULL) {
-			printf("->%d",p->Data);
-			p=p->Next;
+	for(i=k-1;i>0;i--) {
+		for(j=0;j<i;j++) {
+			if(Key[i]->Data>Key[j]->Data) {
+				p=Key[i];
+				Key[i]=Key[j];
+				Key[j]=p;
+			}
 		}
-		putchar('\n');
 	}
+	for(i=0;i<k-1;i++) {
+		printf("%d ",Key[i]->Data);
+	}
+	printf("%d",Key[k-1]->Data);
 	return 0;
 }
