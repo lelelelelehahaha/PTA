@@ -1,72 +1,87 @@
 #include<stdio.h>
+#include<stdlib.h>
+//printf("Debug output\t \n");
 
-int T[101],t;
-int Num[101],num;
-int a[101],K;
-int b[101];
+struct Node {
+	int Data;
+	struct Node *Next;
+};
+int k;
+struct Node *temp,*Key[101];
 
-void cut(int n) {
-	if(n==1||iscover(n)) return;
-	if(n>>1<<1==n) {
-		cut(n>>1);
-		T[t]=n>>1;
-		t++;
+void Print(struct Node *L) {
+	while(L!=NULL) {
+		printf("->%d",L->Data);
+		L=L->Next;
 	}
-	else {
-		cut((n*3+1)>>1);
-		T[t]=(n*3+1)>>1;
-		t++;
-	}
+	putchar('\n');
 }
-int iscover(int n) {
+
+struct Node * Insert(struct Node *L,int N) {
+	L=malloc(sizeof(struct Node));
+	L->Data=N;
+	L->Next=NULL;
+	return L;
+}
+
+int cut(int n,struct Node *p) {
+	if(iscov(n)||n==1) return n;
+	if(n&1) n=n+((n+1)>>1);
+	else n=n>>1;
+	p->Next=Insert(p,n);
+	return cut(n,p->Next);
+}
+
+int iscov(int n) {
 	int i;
-	for(i=0;i<t;i++) {
-		if(n==T[i]) return 1;
+	struct Node *p;
+	for(i=0;i<k;i++) {
+		p=Key[i];
+		while(p!=NULL) {
+			if(p->Data==n) return 1;
+			p=p->Next;
+		}
 	}
 	return 0;
-}
-void fun() {
-	int i,j;
-	for(i=0;i<K;i++) {
-		for(j=0;j<t;j++) {
-			if(a[i]==T[j]) b[j]==1;
-		}
-	}
-	for(i=0;i<t;i++) {
-		if(!b[i]) {
-			Num[num]=a[i];
-			num++;
-		}
-	}
-	int tmp;
-	for(i=num-1;i>0;i--) {
-		for(j=0;j<i;j++) {
-			if(Num[j]<Num[i]) {
-				tmp=Num[i];
-				Num[i]=Num[j];
-				Num[j]=tmp;
-			}
-		}
-	}
 }
 
 int main()
 {
+	int K,i,j;
+	int n,m;
+	struct Node *p;
 	scanf("%d",&K);
-	int i;
-	int n;
 	for(i=0;i<K;i++) {
 		scanf("%d",&n);
-		a[i]=n;
-		cut(n);
+		if(iscov(n)) continue;
+		temp=Insert(temp,n);
+		m=cut(n,temp);
+		Print(temp);
+		for(j=0;j<k;j++) {
+			if(m==Key[j]->Data) {
+				p=temp->Next;
+				while(p!=NULL) p=p->Next;
+				p=Insert(p,Key[j]->Data);
+				p->Next=Key[j]->Next;
+				Key[j]->Data=temp->Data;
+				Key[j]->Next=temp->Next;
+				break;
+			}
+		}
+		if(j==k) {
+			Key[k]=Insert(Key[k],temp->Data);
+			Key[k]->Next=temp->Next;
+			k++;
+		}
 	}
-	for(i=0;i<t;i++) {
-		printf("%d ",T[i]);
+	for(i=0;i<k;i++) {
+		printf("%d",Key[i]->Data);
+		p=Key[i]->Next;
+		while(p!=NULL) {
+			printf("->%d",p->Data);
+			p=p->Next;
+		}
+		putchar('\n');
 	}
-//	fun();
-//	for(i=0;i<num;i++) {
-//		printf("%d",Num[i]);
-//		if(i!=num-1) putchar(' ');
-//	}
 	return 0;
 }
